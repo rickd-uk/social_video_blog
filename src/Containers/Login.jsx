@@ -3,14 +3,17 @@ import React from 'react'
 
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import { firebaseApp } from '../firebase-config'
+import { doc, getFirestore, setDoc } from 'firebase/firestore'
+
+import { useNavigate } from 'react-router-dom'
 
 import MusicBg from '../img/musicbg.jpg'
 import { FcGoogle } from 'react-icons/fc'
-import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
 	const firebaseAuth = getAuth(firebaseApp)
 	const provider = new GoogleAuthProvider()
+	const firebaseDB = getFirestore(firebaseApp)
 
 	const navigate = useNavigate()
 
@@ -20,6 +23,10 @@ const Login = () => {
 
 		localStorage.setItem('user', JSON.stringify(providerData))
 		localStorage.setItem('accessToken', JSON.stringify(refreshToken))
+
+		await setDoc(doc(firebaseDB, 'users', providerData[0].uid), providerData[0])
+
+		navigate('/', { replace: true })
 	}
 
 	return (
