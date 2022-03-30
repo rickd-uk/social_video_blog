@@ -1,7 +1,7 @@
 // prettier-ignore
 import { Box, Button, Flex, FormLabel, Input, InputGroup, InputLeftElement, Menu, MenuButton, MenuItem, MenuList, Text, useColorMode, useColorModeValue } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
-import { IoChevronDown, IoCloudUpload, IoLocation, IoTrash } from 'react-icons/io5'
+import { IoCheckmark, IoChevronDown, IoCloudUpload, IoLocation, IoTrash, IoWarning } from 'react-icons/io5'
 
 import { categories } from '../data'
 import Spinner from './Spinner'
@@ -9,6 +9,7 @@ import Spinner from './Spinner'
 // prettier-ignore
 import { getStorage, ref, upload, uploadBytesResumable, getDownloadURL, deleteObject} from 'firebase/storage'
 import { firebaseApp } from '../firebase-config'
+import AlertMsg from './AlertMsg'
 
 const Create = () => {
 	const { colorMode } = useColorMode()
@@ -21,6 +22,10 @@ const Create = () => {
 	const [videoAsset, setVideoAsset] = useState(null)
 	const [loading, setLoading] = useState(false)
 	const [progress, setProgress] = useState(1)
+	const [alert, setAlert] = useState(false)
+	const [alertStatus, setAlertStatus] = useState('')
+	const [alertMsg, setAlertMsg] = useState('')
+	const [alertIcon, setAlertIcon] = useState(null)
 
 	const storage = getStorage(firebaseApp)
 
@@ -46,6 +51,13 @@ const Create = () => {
 				getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
 					setVideoAsset(downloadURL)
 					setLoading(false)
+					setAlert(true)
+					setAlertStatus('success')
+					setAlertIcon(<IoCheckmark fontSize={25} />)
+					setAlertMsg('Your video has been uploaded')
+					setTimeout(() => {
+						setAlert(false)
+					}, 4000)
 				})
 			},
 		)
@@ -56,6 +68,13 @@ const Create = () => {
 		deleteObject(deleteRef)
 			.then(() => {
 				setVideoAsset(null)
+				setAlert(true)
+				setAlertStatus('warning')
+				setAlertIcon(<IoWarning fontSize={25} />)
+				setAlertMsg('Your video was removed')
+				setTimeout(() => {
+					setAlert(false)
+				}, 4000)
 			})
 			.catch((error) => {
 				console.log(error)
@@ -79,6 +98,8 @@ const Create = () => {
 				alignItems={'center'}
 				justifyContent={'center'}
 				gap={2}>
+				{alert && <AlertMsg status={alertStatus} msg={alertMsg} icon={alertIcon} />}
+
 				{/* title input */}
 				<Input
 					variant={'flushed'}
