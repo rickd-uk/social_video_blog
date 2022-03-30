@@ -1,10 +1,14 @@
 // prettier-ignore
 import { Box, Button, Flex, FormLabel, Input, InputGroup, InputLeftElement, Menu, MenuButton, MenuItem, MenuList, Text, useColorMode, useColorModeValue } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IoChevronDown, IoCloudUpload, IoLocation } from 'react-icons/io5'
 
 import { categories } from '../data'
 import Spinner from './Spinner'
+
+// prettier-ignore
+import { getStorage, ref, upload, uploadBytesResumable, getDownloadURL, deleteObject} from 'firebase/storage'
+import { firebaseApp } from '../firebase-config'
 
 const Create = () => {
 	const { colorMode } = useColorMode()
@@ -17,6 +21,39 @@ const Create = () => {
 	const [videoAsset, setVideoAsset] = useState(null)
 	const [loading, setLoading] = useState(false)
 	const [progress, setProgress] = useState(1)
+
+	const storage = getStorage(firebaseApp)
+
+	const uploadImage = (e) => {
+		setLoading(true)
+		const videoFile = e.target.files[0]
+
+		const storageRef = ref(storage, `Videos/${Date.now()}-${videoFile.name}`)
+
+		const uploadTask = uploadBytesResumable(storageRef, videoFile)
+
+		uploadTask.on(
+			'state_changed',
+			(snapshot) => {
+				const uploadProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+				setProgress(uploadProgress)
+			},
+			(error) => {
+				console.log(error)
+			},
+			// Successful uploads
+			() => {
+				getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+					setVideoAsset(downloadURL)
+					setLoading(false)
+				})
+			},
+		)
+	}
+
+	useEffect(() => {
+		console.log(videoAsset)
+	}, [videoAsset])
 
 	return (
 		<Flex justifyContent={'center'} alignItems={'center'} width={'100vw'} minHeight='100vh' padding={10}>
@@ -109,9 +146,18 @@ const Create = () => {
 									)}
 								</Flex>
 							</Flex>
+							{!loading && (
+								<input
+									type='file'
+									name='upload-image'
+									onChange={uploadImage}
+									style={{ width: 0, height: 0 }}
+									accept='video/mp4, video/x-m4v, video/*'
+								/>
+							)}
 						</FormLabel>
 					) : (
-						<Box>VIDEO</Box>
+						<Flex width={'full'} height={'full'} justifyContent={'center'} alignItems={'center'} bg='black' position={'relative'}></Flex>
 					)}
 				</Flex>
 			</Flex>
