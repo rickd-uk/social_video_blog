@@ -1,9 +1,10 @@
 // prettier-ignore
 import { Box, Button, Flex, FormLabel, Input, InputGroup, InputLeftElement, Menu, MenuButton, MenuItem, MenuList, Text, useColorMode, useColorModeValue } from '@chakra-ui/react'
 import React, { useState } from 'react'
-import { IoChevronDown, IoLocation } from 'react-icons/io5'
+import { IoChevronDown, IoCloudUpload, IoLocation } from 'react-icons/io5'
 
 import { categories } from '../data'
+import Spinner from './Spinner'
 
 const Create = () => {
 	const { colorMode } = useColorMode()
@@ -15,6 +16,7 @@ const Create = () => {
 	const [location, setLocation] = useState('')
 	const [videoAsset, setVideoAsset] = useState(null)
 	const [loading, setLoading] = useState(false)
+	const [progress, setProgress] = useState(1)
 
 	return (
 		<Flex justifyContent={'center'} alignItems={'center'} width={'100vw'} minHeight='100vh' padding={10}>
@@ -94,13 +96,18 @@ const Create = () => {
 					{!videoAsset ? (
 						<FormLabel width='full'>
 							<Flex direction={'column'} alignItems='center' justifyContent={'center'} height='full' width={'full'}>
-								<Flex
-									direction={'column'}
-									alignItems='center'
-									justifyContent={'center'}
-									height='full'
-									width={'full'}
-									cursor='pointer'></Flex>
+								<Flex direction={'column'} alignItems='center' justifyContent={'center'} height='full' width={'full'} cursor='pointer'>
+									{loading ? (
+										<Spinner msg={'Uploading your Video'} progress={progress} />
+									) : (
+										<>
+											<IoCloudUpload fontSize={30} color={`${colorMode === 'dark' ? '#f1f1f1' : '#111'}`} />
+											<Text mt={5} fontSize={20} color={textColor}>
+												Click to upload
+											</Text>
+										</>
+									)}
+								</Flex>
 							</Flex>
 						</FormLabel>
 					) : (
