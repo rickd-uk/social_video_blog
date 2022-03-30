@@ -51,6 +51,20 @@ const Navbar = ({ user }) => {
 						<IoAdd fontSize={25} color={`${colorMode === 'dark' ? '#111' : '#f1f1f1'}`} />
 					</Flex>
 				</Link>
+
+				<Menu>
+					<MenuButton>
+						<Image src={user?.photoURL} width='40px' height='40px' rounded='full' />
+					</MenuButton>
+					<MenuList shadow={'lg'}>
+						<Link to={''}>
+							<MenuItem>My Account</MenuItem>
+						</Link>
+						<MenuItem flexDirection={'row'} alignItems={'center'} gap={4}>
+							Logout <IoLogOut fontSize={20} />
+						</MenuItem>
+					</MenuList>
+				</Menu>
 			</Flex>
 		</Flex>
 	)
