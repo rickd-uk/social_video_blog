@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom'
 
 //prettier-ignore
 import { useColorModeValue, Flex, useColorMode, Image, InputGroup, InputLeftElement, Input } from '@chakra-ui/react'
-import { IoSearch } from 'react-icons/io5'
+import { IoMoon, IoSearch, IoSunny } from 'react-icons/io5'
 
 const Navbar = ({ user }) => {
 	const { colorMode, toggleColorMode } = useColorMode()
@@ -21,6 +21,19 @@ const Navbar = ({ user }) => {
 				<InputLeftElement pointerEvents='none' children={<IoSearch fontSize={25} />} />
 				<Input type='text' placeholder='Search...' fontSize={18} fontWeight='medium' variant={'filled'}></Input>
 			</InputGroup>
+
+			<Flex justifyContent={'center'} alignItems={'center'}>
+				<Flex
+					width='40px'
+					height='40px'
+					justifyContent={'center'}
+					alignItems={'center'}
+					cursor={'pointer'}
+					borderRadius='5px'
+					onClick={toggleColorMode}>
+					{colorMode === 'light' ? <IoMoon fontSize={25} /> : <IoSunny fontSize={25} />}
+				</Flex>
+			</Flex>
 		</Flex>
 	)
 }
