@@ -1,7 +1,7 @@
 // prettier-ignore
 import { Box, Button, Flex, FormLabel, Input, InputGroup, InputLeftElement, Menu, MenuButton, MenuItem, MenuList, Text, useColorMode, useColorModeValue } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
-import { IoChevronDown, IoCloudUpload, IoLocation } from 'react-icons/io5'
+import { IoChevronDown, IoCloudUpload, IoLocation, IoTrash } from 'react-icons/io5'
 
 import { categories } from '../data'
 import Spinner from './Spinner'
@@ -157,7 +157,26 @@ const Create = () => {
 							)}
 						</FormLabel>
 					) : (
-						<Flex width={'full'} height={'full'} justifyContent={'center'} alignItems={'center'} bg='black' position={'relative'}></Flex>
+						<Flex width={'full'} height={'full'} justifyContent={'center'} alignItems={'center'} bg='black' position={'relative'}>
+							<Flex
+								justifyContent={'center'}
+								alignItems={'center'}
+								width={'40px'}
+								height={'40px'}
+								rounded='full'
+								bg={'red'}
+								top={5}
+								right={5}
+								position={'absolute'}
+								cursor={'pointer'}
+								zIndex={10}
+								// onClick={deleteImage}
+							>
+								<IoTrash fontSize={20} color='white' />
+							</Flex>
+
+							<video src={videoAsset} controls style={{ width: '100%', height: '100%' }}></video>
+						</Flex>
 					)}
 				</Flex>
 			</Flex>
