@@ -8,7 +8,6 @@ const Home = ({ user }) => {
 	return (
 		<>
 			<Navbar user={user} />
-
 			<Flex direction={'column'} justifyContent='start' alignItems={'center'} width='20'>
 				<Category />
 			</Flex>
