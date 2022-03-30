@@ -16,6 +16,11 @@ const Navbar = ({ user }) => {
 			<Link to={'/'}>
 				<Image src={colorMode === 'light' ? logo_dark : logo} width={'180px'}></Image>
 			</Link>
+
+			<InputGroup mx={6} width='50vw'>
+				<InputLeftElement pointerEvents='none' children={<IoSearch fontSize={25} />} />
+				<Input type='text' placeholder='Search...' fontSize={18} fontWeight='medium' variant={'filled'}></Input>
+			</InputGroup>
 		</Flex>
 	)
 }
