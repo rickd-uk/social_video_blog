@@ -1,6 +1,6 @@
 // prettier-ignore
 import { Box, Button, Flex, FormLabel, Input, InputGroup, InputLeftElement, Menu, MenuButton, MenuItem, MenuList, Text, useColorMode, useColorModeValue } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { IoCheckmark, IoChevronDown, IoCloudUpload, IoLocation, IoTrash, IoWarning } from 'react-icons/io5'
 
 import { categories } from '../data'
@@ -10,11 +10,14 @@ import Spinner from './Spinner'
 import { getStorage, ref, upload, uploadBytesResumable, getDownloadURL, deleteObject} from 'firebase/storage'
 import { firebaseApp } from '../firebase-config'
 import AlertMsg from './AlertMsg'
+import { Editor } from '@tinymce/tinymce-react'
 
 const Create = () => {
 	const { colorMode } = useColorMode()
 	const bg = useColorModeValue('gray.50', 'gray.900')
 	const textColor = useColorModeValue('gray.900', 'gray.50')
+
+	const editorRef = useRef(null)
 
 	const [title, setTitle] = useState('')
 	const [category, setCategory] = useState('Choose a category')
@@ -26,6 +29,7 @@ const Create = () => {
 	const [alertStatus, setAlertStatus] = useState('')
 	const [alertMsg, setAlertMsg] = useState('')
 	const [alertIcon, setAlertIcon] = useState(null)
+	const [description, setDescription] = useState('')
 
 	const storage = getStorage(firebaseApp)
 
@@ -79,6 +83,13 @@ const Create = () => {
 			.catch((error) => {
 				console.log(error)
 			})
+	}
+
+	const getDescriptionValue = () => {
+		if (editorRef.current) {
+			console.log(editorRef.current.getContent())
+			setDescription(editorRef.current.getContent())
+		}
 	}
 
 	useEffect(() => {
@@ -146,7 +157,7 @@ const Create = () => {
 							errorBorderColor='red'
 							type={'text'}
 							_placeholder={{ color: 'gray.500' }}
-							value={title}
+							value={location}
 							onChange={(e) => setLocation(e.target.value)}
 						/>
 					</InputGroup>
@@ -210,6 +221,30 @@ const Create = () => {
 						</Flex>
 					)}
 				</Flex>
+
+				<Editor
+					onChange={getDescriptionValue}
+					onInit={(evt, editor) => (editorRef.current = editor)}
+					apiKey={process.env.REACT_APP_TINYMCE_EDITOR_API}
+					init={{
+						height: 500,
+						width: '100%',
+						menubar: false,
+						plugins: [
+							'advlist autolink lists link image charmap print preview anchor',
+							'searchreplace visualblocks code fullscreen',
+							'insertdatetime media table paste code help wordcount',
+						],
+						toolbar:
+							'undo redo | formatselect | ' +
+							'bold italic backcolor | alignleft aligncenter ' +
+							'alignright alignjustify | bullist numlist outdent indent | ' +
+							'removeformat | help',
+						content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+						content_css: 'dark',
+						skin: 'oxide-dark',
+					}}
+				/>
 			</Flex>
 		</Flex>
 	)
