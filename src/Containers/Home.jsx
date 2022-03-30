@@ -3,13 +3,14 @@ import { Flex } from '@chakra-ui/react'
 import { Category, Create, Feed, Navbar, Search, VideoPin } from '../Components'
 import { Routes, Route } from 'react-router-dom'
 
+import { categories } from '../data'
+
 const Home = ({ user }) => {
-	console.log(user)
 	return (
 		<>
 			<Navbar user={user} />
 			<Flex direction={'column'} justifyContent='start' alignItems={'center'} width='20'>
-				<Category />
+				{categories && categories.map((data) => <Category key={data.id} data={data} />)}
 			</Flex>
 
 			<Flex width={'full'} justifyContent='center' alignItems={'center'} px='4'>
