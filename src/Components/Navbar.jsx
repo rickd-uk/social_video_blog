@@ -5,8 +5,8 @@ import logo_dark from '../img/logo_dark.png'
 import { Link, useNavigate } from 'react-router-dom'
 
 //prettier-ignore
-import { useColorModeValue, Flex, useColorMode, Image, InputGroup, InputLeftElement, Input } from '@chakra-ui/react'
-import { IoMoon, IoSearch, IoSunny } from 'react-icons/io5'
+import { useColorModeValue, Flex, useColorMode, Image, InputGroup, InputLeftElement, Input,Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
+import { IoMoon, IoSearch, IoSunny, IoAdd, IoLogOut } from 'react-icons/io5'
 
 const Navbar = ({ user }) => {
 	const { colorMode, toggleColorMode } = useColorMode()
@@ -33,6 +33,24 @@ const Navbar = ({ user }) => {
 					onClick={toggleColorMode}>
 					{colorMode === 'light' ? <IoMoon fontSize={25} /> : <IoSunny fontSize={25} />}
 				</Flex>
+
+				{/* create btn  */}
+				<Link to={'/create'}>
+					<Flex
+						justifyContent={'center'}
+						alignItems={'center'}
+						bg={bg}
+						width='40px'
+						height='40px'
+						borderRadius='5px'
+						mx={6}
+						cursor='pointer'
+						_hover={{ shadow: 'md' }}
+						transition='ease-in-out'
+						transitionDuration={'0.3s'}>
+						<IoAdd fontSize={25} color={`${colorMode === 'dark' ? '#111' : '#f1f1f1'}`} />
+					</Flex>
+				</Link>
 			</Flex>
 		</Flex>
 	)
