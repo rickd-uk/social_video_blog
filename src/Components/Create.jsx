@@ -1,16 +1,26 @@
+import { getUser } from '../utils'
+
+// BUTTONS & INPUTS
 // prettier-ignore
-import { Box, Button, Flex, FormLabel, Input, InputGroup, InputLeftElement, Menu, MenuButton, MenuItem, MenuList, Text, useColorMode, useColorModeValue } from '@chakra-ui/react'
+import { Button, Flex, FormLabel, Input, InputGroup, InputLeftElement, Menu, MenuButton, MenuItem, MenuList, Text, useColorMode, useColorModeValue } from '@chakra-ui/react'
 import React, { useEffect, useRef, useState } from 'react'
 import { IoCheckmark, IoChevronDown, IoCloudUpload, IoLocation, IoTrash, IoWarning } from 'react-icons/io5'
 
 import { categories } from '../data'
-import Spinner from './Spinner'
 
-// prettier-ignore
-import { getStorage, ref, upload, uploadBytesResumable, getDownloadURL, deleteObject} from 'firebase/storage'
-import { firebaseApp } from '../firebase-config'
+// SPINNER, ALERT, EDITOR
+import Spinner from './Spinner'
 import AlertMsg from './AlertMsg'
 import { Editor } from '@tinymce/tinymce-react'
+
+// FIREBASE
+import { getStorage, ref, upload, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage'
+import { firebaseApp } from '../firebase-config'
+
+// FIRESTORE
+import { doc, getFirestore, setDoc } from 'firebase/firestore'
+import { Navigate, useNavigate } from 'react-router-dom'
+const firestoreDB = getFirestore(firebaseApp)
 
 const Create = () => {
 	const { colorMode } = useColorMode()
@@ -30,6 +40,9 @@ const Create = () => {
 	const [alertMsg, setAlertMsg] = useState('')
 	const [alertIcon, setAlertIcon] = useState(null)
 	const [description, setDescription] = useState('')
+
+	const [userInfo] = getUser()
+	const navigate = useNavigate()
 
 	const storage = getStorage(firebaseApp)
 
@@ -92,9 +105,38 @@ const Create = () => {
 		}
 	}
 
-	useEffect(() => {
-		console.log(videoAsset)
-	}, [videoAsset])
+	const uploadDetails = async () => {
+		try {
+			setLoading(true)
+			if (!title && !category && !videoAsset) {
+				setAlert(true)
+				setAlertStatus('error')
+				setAlertIcon(<IoWarning fontSize={25} />)
+				setAlertMsg('Required Fields are missing')
+				setTimeout(() => {
+					setAlert(false)
+				}, 3000)
+			} else {
+				const data = {
+					id: `${Date.now()}`,
+					title,
+					userId: userInfo?.uid,
+					category,
+					location,
+					videoUrl: videoAsset,
+					description,
+				}
+				await setDoc(doc(firestoreDB, 'Videos', `${Date.now()}`), data)
+				setLoading(false)
+				navigate('/', { replace: true })
+			}
+			setLoading(false)
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
+	useEffect(() => {}, [title, location, description, category])
 
 	return (
 		<Flex justifyContent={'center'} alignItems={'center'} width={'100vw'} minHeight='100vh' padding={10}>
@@ -225,7 +267,7 @@ const Create = () => {
 				<Editor
 					onChange={getDescriptionValue}
 					onInit={(evt, editor) => (editorRef.current = editor)}
-					apiKey={process.env.REACT_APP_TINYMCE_EDITOR_API}
+					apiKey={process.env.REACT_APP_TINYMCE_API_KEY}
 					init={{
 						height: 500,
 						width: '100%',
@@ -245,6 +287,18 @@ const Create = () => {
 						skin: 'oxide-dark',
 					}}
 				/>
+
+				<Button
+					isLoading={loading}
+					loadingText='Uploading'
+					colorScheme='linkedin'
+					variant={`${loading ? 'outline' : 'solid'}`}
+					width={'x1'}
+					_hover={{ shadow: 'lg' }}
+					fontSize={20}
+					onClick={() => uploadDetails()}>
+					Upload
+				</Button>
 			</Flex>
 		</Flex>
 	)

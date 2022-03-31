@@ -3,7 +3,7 @@ import { Route, Routes, useNavigate } from 'react-router-dom'
 import Home from './Containers/Home'
 import Login from './Containers/Login'
 
-import { getUserAccessToken, getUser } from './utils/fetchUser'
+import { getUserAccessToken, getUser } from './utils'
 
 const App = () => {
 	const [user, setUser] = useState(null)

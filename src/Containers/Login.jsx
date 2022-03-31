@@ -13,7 +13,7 @@ import { FcGoogle } from 'react-icons/fc'
 const Login = () => {
 	const firebaseAuth = getAuth(firebaseApp)
 	const provider = new GoogleAuthProvider()
-	const firebaseDB = getFirestore(firebaseApp)
+	const firestoreDB = getFirestore(firebaseApp)
 
 	const navigate = useNavigate()
 
@@ -24,7 +24,7 @@ const Login = () => {
 		localStorage.setItem('user', JSON.stringify(providerData))
 		localStorage.setItem('accessToken', JSON.stringify(refreshToken))
 
-		await setDoc(doc(firebaseDB, 'users', providerData[0].uid), providerData[0])
+		await setDoc(doc(firestoreDB, 'users', providerData[0].uid), providerData[0])
 
 		navigate('/', { replace: true })
 	}

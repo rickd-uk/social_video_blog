@@ -10,7 +10,7 @@ const Home = ({ user }) => {
 		<>
 			<Navbar user={user} />
 			<Flex width={'100vw'}>
-				<Flex direction={'column'} justifyContent='start' alignItems={'center'} width='8%'>
+				<Flex direction={'column'} justifyContent='start' alignItems={'center'} width='8%' ml={10}>
 					{categories && categories.map((data) => <Category key={data.id} data={data} />)}
 				</Flex>
 				<Flex width={'95%'} px={4}>
