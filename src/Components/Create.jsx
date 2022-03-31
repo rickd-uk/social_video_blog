@@ -136,7 +136,14 @@ const Create = () => {
 		}
 	}
 
-	useEffect(() => {}, [title, location, description, category])
+	const mountedRef = useRef(true)
+
+	useEffect(() => {
+		// clean up controller
+		return () => {
+			mountedRef.current = false
+		}
+	}, [title, location, description, category])
 
 	return (
 		<Flex justifyContent={'center'} alignItems={'center'} width={'100vw'} minHeight='100vh' padding={10}>

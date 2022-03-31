@@ -8,8 +8,8 @@ const Spinner = ({ msg, progress }) => {
 	return (
 		<Flex direction={'column'} justifyContent={'center'} alignItems={'center'} height={'full'} px={10}>
 			<Circles color='#00BFFF' height={80} width={80} />
-			<Text fontSize={15} textAlign={'center'} px={2}>
-				{msg}
+			<Text fontSize={15} textAlign={'center'} px={2} py={4}>
+				{msg}...
 			</Text>
 
 			{progress && (
