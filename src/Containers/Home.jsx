@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Flex, Spinner } from '@chakra-ui/react'
-import { Category, Create, Feed, Navbar, Search, VideoPin, VideoPinDetail } from '../Components'
+import { Category, Create, Feed, Navbar, Search, UserProfile, VideoPin, VideoPinDetail } from '../Components'
 import { Routes, Route } from 'react-router-dom'
 
 import { categories } from '../data'
@@ -21,6 +21,7 @@ const Home = ({ user }) => {
 						<Route path='/create' element={<Create />} />
 						<Route path='/videoDetail/:videoId' element={<VideoPinDetail />} />
 						<Route path='/search' element={<Search />} />
+						<Route path='/userDetail/:userId' element={<UserProfile />} />
 					</Routes>
 				</Flex>
 			</Flex>
