@@ -37,18 +37,21 @@ const VideoPin = ({ data }) => {
 			position='relative'
 			maxWidth={'300px'}
 			bg={'gray.200'}>
-			<Link to={''}>
+			{/* VIDEO */}
+			<Link to={`/videoDetail/${data?.id}`}>
 				<video src={data.videoUrl} muted onMouseOver={(e) => e.target.play()} onMouseOut={(e) => e.target.pause()} />
 			</Link>
 
 			<Flex position={'absolute'} bottom='0' left='0' p={2} bg={bg} width='full' direction={'column'}>
+				{/* Video Title */}
 				<Flex width={'full'} justifyContent={'space-between'} alignItems={'center'}>
 					<Text color={textColor} isTruncated fontSize={20}>
 						{data.title}
 					</Text>
 
+					{/* user avatar */}
 					<Link to={''}>
-						<Image src={userInfo.photoURL} rounded='full' width={'50px'} height={'50px'} border='2px' borderColor={bg} mt={-10} />
+						<Image src={userInfo?.photoURL} rounded='full' width={'50px'} height={'50px'} border='2px' borderColor={bg} mt={-10} />
 					</Link>
 				</Flex>
 			</Flex>
