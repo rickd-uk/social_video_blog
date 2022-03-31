@@ -7,6 +7,8 @@ import { firebaseApp } from '../firebase-config'
 
 import { getUserInfo } from '../utils/getData'
 
+import moment from 'moment'
+
 const VideoPin = ({ data }) => {
 	const fireStoreDB = getFirestore(firebaseApp)
 
@@ -54,8 +56,12 @@ const VideoPin = ({ data }) => {
 						<Image src={userInfo?.photoURL} rounded='full' width={'50px'} height={'50px'} border='2px' borderColor={bg} mt={-10} />
 					</Link>
 				</Flex>
+
+				<Text fontSize={12} color={textColor} ml={'auto'}>
+					{moment(new Date(parseInt(data.id)).toISOString()).fromNow()}
+				</Text>
 			</Flex>
-		</Flex>
+		</Flex> // Video
 	)
 }
 
