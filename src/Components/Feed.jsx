@@ -1,5 +1,6 @@
-import { getFirestore } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
+
+import { getFirestore } from 'firebase/firestore'
 import { firebaseApp } from '../firebase-config'
 import { getAllFeeds } from '../utils/getData'
 
@@ -19,7 +20,6 @@ const Feed = () => {
 		setLoading(true)
 		getAllFeeds(fireStoreDB).then((data) => {
 			setFeeds(data)
-			console.log(data)
 		})
 	}, [fireStoreDB])
 

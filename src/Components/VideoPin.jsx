@@ -1,11 +1,29 @@
 import { Flex, Image, Text, useColorMode, useColorModeValue } from '@chakra-ui/react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { getFirestore } from 'firebase/firestore'
+import { firebaseApp } from '../firebase-config'
+
+import { getUserInfo } from '../utils/getData'
+
 const VideoPin = ({ data }) => {
+	const fireStoreDB = getFirestore(firebaseApp)
+
 	const { colorMode } = useColorMode()
 	const bg = useColorModeValue('blackAlpha.700', 'gray.900')
 	const textColor = useColorModeValue('gray.100', 'gray.100')
+
+	const [userID, setUserID] = useState(null)
+	const [userInfo, setUserInfo] = useState(null)
+
+	useEffect(() => {
+		if (data) setUserID(data.userId)
+		if (userID)
+			getUserInfo(fireStoreDB, userID).then((data) => {
+				setUserInfo(data)
+			})
+	}, [userID])
 
 	return (
 		<Flex
@@ -29,7 +47,9 @@ const VideoPin = ({ data }) => {
 						{data.title}
 					</Text>
 
-					<Image src=''></Image>
+					<Link to={''}>
+						<Image src={userInfo.photoURL} rounded='full' width={'50px'} height={'50px'} border='2px' borderColor={bg} mt={-10} />
+					</Link>
 				</Flex>
 			</Flex>
 		</Flex>

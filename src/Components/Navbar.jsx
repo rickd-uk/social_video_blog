@@ -11,6 +11,7 @@ import { IoMoon, IoSearch, IoSunny, IoAdd, IoLogOut } from 'react-icons/io5'
 const Navbar = ({ user }) => {
 	const { colorMode, toggleColorMode } = useColorMode()
 	const bg = useColorModeValue('gray.600', 'gray.300')
+
 	return (
 		<Flex justifyContent={'space-between'} alignItems='center' width={'100vw'} p={4}>
 			<Link to={'/'}>
