@@ -1,8 +1,12 @@
-import Spinner from '../Components/Spinner'
 import { getFirestore } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { firebaseApp } from '../firebase-config'
 import { getAllFeeds } from '../utils/getData'
+
+// ui elements
+import Spinner from '../Components/Spinner'
+import { Box, SimpleGrid } from '@chakra-ui/react'
+import VideoPin from './VideoPin'
 
 const Feed = () => {
 	// firebase db instance
@@ -17,13 +21,18 @@ const Feed = () => {
 			setFeeds(data)
 			setTimeout(() => {
 				setLoading(false)
+				console.log(data)
 			}, 3000)
 		})
 	}, [fireStoreDB])
 
-	return <Spinner msg={'Loading your feeds'} />
+	if (loading) <Spinner msg={'Loading your feeds'} />
 
-	// return <div>Feed</div>
+	return (
+		<SimpleGrid minChildWidth='300px' spacing='15px' width='full' autoColumns={'max-content'} px='2px' overflow={'hidden'}>
+			{feeds && feeds.map((data) => <VideoPin key={data.id} maxWidth={420} height='80px' />)}
+		</SimpleGrid>
+	)
 }
 
 export default Feed

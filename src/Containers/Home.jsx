@@ -16,6 +16,7 @@ const Home = ({ user }) => {
 				<Flex width={'95%'} px={4} justifyContent={'center'} alignItems={'center'}>
 					<Routes>
 						<Route path='/' element={<Feed />} />
+
 						<Route path='/category/:categoryId' element={<Feed />} />
 						<Route path='/create' element={<Create />} />
 						<Route path='/videoDetail/:videoId' element={<VideoPin />} />
