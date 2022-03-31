@@ -52,9 +52,20 @@ const VideoPin = ({ data }) => {
 					</Text>
 
 					{/* user avatar */}
-					<Link to={`/userDetail/${userID}`}>
-						<Image src={userInfo?.photoURL} rounded='full' width={'50px'} height={'50px'} border='2px' borderColor={bg} mt={-10} />
-					</Link>
+					<Flex zIndex={100}>
+						<Link to={`/userDetail/${userID}`}>
+							<Image
+								src={userInfo?.photoURL}
+								rounded='full'
+								minWidth={'50px'}
+								width={'50px'}
+								height={'50px'}
+								border='2px'
+								borderColor={bg}
+								mt={-10}
+							/>
+						</Link>
+					</Flex>
 				</Flex>
 
 				<Text fontSize={12} color={textColor} ml={'auto'}>
