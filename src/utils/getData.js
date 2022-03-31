@@ -19,3 +19,15 @@ export const getUserInfo = async (fireStoreDB, userId) => {
 		return 'No such document exists'
 	}
 }
+
+// get specific video
+export const getSpecificVideo = async (fireStoreDB, videoId) => {
+	const videoRef = doc(fireStoreDB, 'Videos', videoId)
+
+	const videoSnap = await getDoc(videoRef)
+	if (videoSnap.exists()) {
+		return videoSnap.data()
+	} else {
+		return 'No such document exists'
+	}
+}

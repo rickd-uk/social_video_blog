@@ -11,6 +11,8 @@ import { logoutUser } from '../utils'
 import { useColorModeValue, Flex, useColorMode, Image, InputGroup, InputLeftElement, Input,Menu, MenuButton, MenuItem, MenuList, Button } from '@chakra-ui/react'
 import { IoMoon, IoSearch, IoSunny, IoAdd, IoLogOut } from 'react-icons/io5'
 
+const avatar = process.env.REACT_APP_DEFAULT_PROFILE_PIC
+
 const Navbar = ({ user }) => {
 	const navigate = useNavigate()
 
@@ -60,7 +62,8 @@ const Navbar = ({ user }) => {
 
 				<Menu>
 					<MenuButton>
-						<Image src={user?.photoURL} width='40px' height='40px' rounded='full' />
+						{console.log(user)}
+						<Image src={user?.photoURL ? user?.photoURL : avatar} minWidth='40px' height='40px' rounded='full' />
 					</MenuButton>
 					<MenuList shadow={'lg'}>
 						<Link to={''}>

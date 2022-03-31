@@ -9,8 +9,25 @@ import { getUserInfo } from '../utils/getData'
 
 import moment from 'moment'
 
-const avatar =
-	'https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fgetdrawings.com%2Ffree-icon%2Fcool-avatar-icons-56.png&f=1&nofb=1'
+const avatar = process.env.REACT_APP_DEFAULT_PROFILE_PIC
+
+// const handlePlay = (e) => {
+// 	var playPromise = e.target.play()
+
+// 	if (playPromise !== undefined) {
+// 		playPromise
+// 			.then((_) => {
+// 				// Automatic playback started!
+// 				// Show playing UI.
+// 				// We can now safely pause video...
+// 				e.target.pause()
+// 			})
+// 			.catch((error) => {
+// 				// Auto-play was prevented
+// 				// Show paused UI.
+// 			})
+// 	}
+// }
 
 const VideoPin = ({ data }) => {
 	const fireStoreDB = getFirestore(firebaseApp)

@@ -20,6 +20,7 @@ const Feed = () => {
 		setLoading(true)
 		getAllFeeds(fireStoreDB).then((data) => {
 			setFeeds(data)
+			setLoading(false)
 		})
 	}, [fireStoreDB])
 
