@@ -19,9 +19,7 @@ const Feed = () => {
 		setLoading(true)
 		getAllFeeds(fireStoreDB).then((data) => {
 			setFeeds(data)
-			setTimeout(() => {
-				setLoading(false)
-			}, 3000)
+			console.log(data)
 		})
 	}, [fireStoreDB])
 
