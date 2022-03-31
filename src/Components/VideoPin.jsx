@@ -9,6 +9,9 @@ import { getUserInfo } from '../utils/getData'
 
 import moment from 'moment'
 
+const avatar =
+	'https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fgetdrawings.com%2Ffree-icon%2Fcool-avatar-icons-56.png&f=1&nofb=1'
+
 const VideoPin = ({ data }) => {
 	const fireStoreDB = getFirestore(firebaseApp)
 
@@ -55,7 +58,7 @@ const VideoPin = ({ data }) => {
 					<Flex zIndex={100}>
 						<Link to={`/userDetail/${userID}`}>
 							<Image
-								src={userInfo?.photoURL}
+								src={userInfo?.photoURL ?? avatar}
 								rounded='full'
 								minWidth={'50px'}
 								width={'50px'}

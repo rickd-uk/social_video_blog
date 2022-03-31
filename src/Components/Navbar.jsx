@@ -2,13 +2,18 @@ import React from 'react'
 
 import logo from '../img/logo.png'
 import logo_dark from '../img/logo_dark.png'
+
 import { Link, useNavigate } from 'react-router-dom'
 
+import { logoutUser } from '../utils'
+
 //prettier-ignore
-import { useColorModeValue, Flex, useColorMode, Image, InputGroup, InputLeftElement, Input,Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
+import { useColorModeValue, Flex, useColorMode, Image, InputGroup, InputLeftElement, Input,Menu, MenuButton, MenuItem, MenuList, Button } from '@chakra-ui/react'
 import { IoMoon, IoSearch, IoSunny, IoAdd, IoLogOut } from 'react-icons/io5'
 
 const Navbar = ({ user }) => {
+	const navigate = useNavigate()
+
 	const { colorMode, toggleColorMode } = useColorMode()
 	const bg = useColorModeValue('gray.600', 'gray.300')
 
@@ -61,7 +66,15 @@ const Navbar = ({ user }) => {
 						<Link to={''}>
 							<MenuItem>My Account</MenuItem>
 						</Link>
-						<MenuItem flexDirection={'row'} alignItems={'center'} gap={4}>
+						<MenuItem flexDirection={'row'} alignItems={'center'} gap={4}></MenuItem>
+						<MenuItem
+							flexDirection={'row'}
+							alignItems={'center'}
+							gap={4}
+							onClick={() => {
+								logoutUser()
+								navigate('/login')
+							}}>
 							Logout <IoLogOut fontSize={20} />
 						</MenuItem>
 					</MenuList>
