@@ -21,7 +21,6 @@ const Feed = () => {
 			setFeeds(data)
 			setTimeout(() => {
 				setLoading(false)
-				console.log(data)
 			}, 3000)
 		})
 	}, [fireStoreDB])
@@ -30,7 +29,7 @@ const Feed = () => {
 
 	return (
 		<SimpleGrid minChildWidth='300px' spacing='15px' width='full' autoColumns={'max-content'} px='2px' overflow={'hidden'}>
-			{feeds && feeds.map((data) => <VideoPin key={data.id} maxWidth={420} height='80px' />)}
+			{feeds && feeds.map((data) => <VideoPin key={data.id} maxWidth={420} height='80px' data={data} />)}
 		</SimpleGrid>
 	)
 }

@@ -1,7 +1,8 @@
 import { Flex } from '@chakra-ui/react'
 import React from 'react'
+import { Link } from 'react-router-dom'
 
-const VideoPin = () => {
+const VideoPin = ({ data }) => {
 	return (
 		<Flex
 			justifyContent={'space-between'}
@@ -13,7 +14,12 @@ const VideoPin = () => {
 			overflow={'hidden'}
 			position='relative'
 			maxWidth={'300px'}
-			bg={'gray.200'}></Flex>
+			bg={'gray.200'}>
+			<Link to={''}>
+				{console.log(data.videoUrl)}
+				<video src={data.videoUrl} muted onMouseOver={(e) => e.target.play()} onMouseOut={(e) => e.target.pause()} />
+			</Link>
+		</Flex>
 	)
 }
 
