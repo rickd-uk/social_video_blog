@@ -73,9 +73,21 @@ const VideoPinDetail = () => {
 
 	const handleProgress = (changeState) => {
 		if (!seeking) {
-			console.log(played * 100)
 			setPlayed(parseFloat(changeState.played / 100) * 100)
 		}
+	}
+
+	const handleSeekChange = (e) => {
+		setPlayed(parseFloat(e / 100))
+	}
+
+	const onSeekMouseDown = (e) => {
+		setSeeking(true)
+	}
+
+	const onSeekMouseUp = (e) => {
+		setSeeking(false)
+		playerRef.current.seekTo(e / 100)
 	}
 
 	if (loading) return <Spinner />
@@ -145,6 +157,9 @@ const VideoPinDetail = () => {
 									value={played * 100}
 									transition={'ease-in-out'}
 									transitionDuration={'0.2'}
+									onChange={handleSeekChange}
+									onMouseDown={onSeekMouseDown}
+									onChangeEnd={onSeekMouseUp}
 									min={0}
 									max={100}>
 									<SliderTrack bg='teal.50'>
