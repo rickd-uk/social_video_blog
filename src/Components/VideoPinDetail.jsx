@@ -1,3 +1,4 @@
+// prettier-ignore
 import {
 	Box,
 	Flex,
@@ -11,7 +12,8 @@ import {
 	Text,
 	useColorModeValue,
 } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
+
+import React, { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import { IoHome, IoPause, IoPlay } from 'react-icons/io5'
@@ -35,6 +37,11 @@ const VideoPinDetail = () => {
 	const [videoInfo, setVideoInfo] = useState(null)
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [muted, setMuted] = useState(false)
+	const [volume, setVolume] = useState(0.5)
+
+	// Custom reference
+	const playerRef = useRef()
+
 	const textColor = useColorModeValue('gray.900', 'gray.50')
 
 	useEffect(() => {
@@ -46,6 +53,21 @@ const VideoPinDetail = () => {
 			})
 		}
 	}, [videoId])
+
+	useEffect(() => {}, [muted, volume])
+
+	const handleVolumeChange = (e) => {
+		setVolume(parseFloat(e / 100))
+		e === 0 ? setMuted(true) : setMuted(false)
+	}
+
+	const handle10sFastRewind = () => {
+		playerRef.current.seekTo(playerRef.current.getCurrentTime() - 10)
+	}
+
+	const handle10sFastForward = () => {
+		playerRef.current.seekTo(playerRef.current.getCurrentTime() + 10)
+	}
 
 	if (loading) return <Spinner />
 
@@ -67,7 +89,17 @@ const VideoPinDetail = () => {
 				<GridItem width={'100%'} colSpan={'2'}>
 					<Flex width={'full'} bg='black' position='relative'>
 						{console.log(videoInfo)}
-						<ReactPlayer url={videoInfo?.videoUrl} width={'100%'} height={'100%'} playing={isPlaying} muted={muted} />
+
+						{/* PLAYER */}
+						<ReactPlayer
+							url={videoInfo?.videoUrl}
+							width={'100%'}
+							height={'100%'}
+							playing={isPlaying}
+							muted={muted}
+							volume={volume}
+							ref={playerRef}
+						/>
 
 						{/* Control for video player */}
 						<Flex
@@ -108,9 +140,9 @@ const VideoPinDetail = () => {
 									<SliderThumb boxSize={3} bg='teal.300' />
 								</Slider>
 
-								{/* Other player controls */}
+								{/* Other player controls - rewind, fast forward */}
 								<Flex width={'full'} alignItems={'center'} my={2} gap={10}>
-									<MdOutlineReplay10 fontSize={30} color={'#f1f1f1'} cursor={'pointer'} />
+									<MdOutlineReplay10 fontSize={30} color={'#f1f1f1'} cursor={'pointer'} onClick={handle10sFastRewind} />
 									<Box onClick={() => setIsPlaying(!isPlaying)}>
 										{!isPlaying ? (
 											<IoPlay fontSize={30} color='#f2f2f2' cursor={'pointer'} />
@@ -118,7 +150,7 @@ const VideoPinDetail = () => {
 											<IoPause fontSize={30} color='#f2f2f2' cursor={'pointer'} />
 										)}
 									</Box>
-									<MdForward10 fontSize={30} color={'#f1f1f1'} cursor={'pointer'} />
+									<MdForward10 fontSize={30} color={'#f1f1f1'} cursor={'pointer'} onClick={handle10sFastForward} />
 									{/* Volumes controls */}
 									<Flex alignItems={'center'}>
 										<Box
@@ -132,7 +164,16 @@ const VideoPinDetail = () => {
 											)}
 										</Box>
 
-										<Slider aria-label='slider-ex-1' defaultValue={30} min={0} max={100} size={'sm'} width={26} mx={2}>
+										<Slider
+											aria-label='slider-ex-1'
+											defaultValue={30}
+											min={0}
+											max={100}
+											size={'sm'}
+											width={26}
+											mx={2}
+											onChangeStart={handleVolumeChange}
+											onChangeEnd={handleVolumeChange}>
 											<SliderTrack bg='teal.50'>
 												<SliderFilledTrack bg='teal.300' />
 											</SliderTrack>
