@@ -31,6 +31,19 @@ import { getFirestore } from 'firebase/firestore'
 
 const firestoreDB = getFirestore(firebaseApp)
 
+const format = (seconds) => {
+	if (isNaN(seconds)) {
+		return '00:00'
+	}
+	const date = new Date(seconds * 1000)
+	const hh = date.getUTCHours()
+	const mm = date.getUTCMinutes().toString().padStart(2, '0')
+	const ss = date.getUTCSeconds().toString().padStart(2, '0')
+
+	if (hh) return `${hh}:${mm}:${ss}` // 01:54:23
+	return `${mm}:${ss}` // 03:24
+}
+
 const VideoPinDetail = () => {
 	const { videoId } = useParams()
 	const [loading, setLoading] = useState(false)
@@ -89,6 +102,12 @@ const VideoPinDetail = () => {
 		setSeeking(false)
 		playerRef.current.seekTo(e / 100)
 	}
+
+	const currentTime = playerRef.current ? playerRef.current.getCurrentTime() : '00:00'
+	const duration = playerRef.current ? playerRef.current.getDuration() : '00:00'
+
+	const elapsedTime = format(currentTime)
+	const totalDuration = format(duration)
 
 	if (loading) return <Spinner />
 
@@ -213,13 +232,13 @@ const VideoPinDetail = () => {
 									{/* Duration of video */}
 									<Flex alignItems={'center'} gap={2}>
 										<Text fontSize={16} color='whitesmoke'>
-											0:00
+											{elapsedTime}
 										</Text>
 										<Text fontSize={16} color='whitesmoke'>
 											/
 										</Text>
 										<Text fontSize={16} color='whitesmoke'>
-											0:00
+											{totalDuration}
 										</Text>
 									</Flex>
 									<Image src={logo} width={'120px'} ml={'auto'} />
