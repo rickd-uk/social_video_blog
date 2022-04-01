@@ -28,6 +28,7 @@ import ReactPlayer from 'react-player'
 
 import { firebaseApp } from '../firebase-config'
 import { getFirestore } from 'firebase/firestore'
+import screenfull from 'screenfull'
 
 const firestoreDB = getFirestore(firebaseApp)
 
@@ -56,6 +57,7 @@ const VideoPinDetail = () => {
 
 	// Custom reference
 	const playerRef = useRef()
+	const playerContainer = useRef()
 
 	const textColor = useColorModeValue('gray.900', 'gray.50')
 
@@ -126,7 +128,7 @@ const VideoPinDetail = () => {
 			{/* Main Grid for video  */}
 			<Grid templateColumns={'repeat(3,1fr)'} gap={2} width={'100%'}>
 				<GridItem width={'100%'} colSpan={'2'}>
-					<Flex width={'full'} bg='black' position='relative'>
+					<Flex width={'full'} bg='black' position='relative' ref={playerContainer}>
 						{/* PLAYER */}
 						<ReactPlayer
 							url={videoInfo?.videoUrl}
@@ -242,8 +244,15 @@ const VideoPinDetail = () => {
 										</Text>
 									</Flex>
 									<Image src={logo} width={'120px'} ml={'auto'} />
-
-									<MdFullscreen fontSize={30} color='#f1f1f1' cursor={'pointer'} onClick={() => {}} />
+									{/* Make Fullscreen */}
+									<MdFullscreen
+										fontSize={30}
+										color='#f1f1f1'
+										cursor={'pointer'}
+										onClick={() => {
+											screenfull.toggle(playerContainer.current)
+										}}
+									/>
 								</Flex>
 							</Flex>
 						</Flex>
