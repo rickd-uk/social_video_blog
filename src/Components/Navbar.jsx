@@ -62,7 +62,6 @@ const Navbar = ({ user }) => {
 
 				<Menu>
 					<MenuButton>
-						{console.log(user)}
 						<Image src={user?.photoURL ? user?.photoURL : avatar} minWidth='40px' height='40px' rounded='full' />
 					</MenuButton>
 					<MenuList shadow={'lg'}>

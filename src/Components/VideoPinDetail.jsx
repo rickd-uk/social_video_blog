@@ -38,6 +38,8 @@ const VideoPinDetail = () => {
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [muted, setMuted] = useState(false)
 	const [volume, setVolume] = useState(0.5)
+	const [played, setPlayed] = useState(0)
+	const [seeking, setSeeking] = useState(false)
 
 	// Custom reference
 	const playerRef = useRef()
@@ -54,7 +56,7 @@ const VideoPinDetail = () => {
 		}
 	}, [videoId])
 
-	useEffect(() => {}, [muted, volume])
+	useEffect(() => {}, [muted, volume, played])
 
 	const handleVolumeChange = (e) => {
 		setVolume(parseFloat(e / 100))
@@ -69,6 +71,13 @@ const VideoPinDetail = () => {
 		playerRef.current.seekTo(playerRef.current.getCurrentTime() + 10)
 	}
 
+	const handleProgress = (changeState) => {
+		if (!seeking) {
+			console.log(played * 100)
+			setPlayed(parseFloat(changeState.played / 100) * 100)
+		}
+	}
+
 	if (loading) return <Spinner />
 
 	return (
@@ -80,7 +89,6 @@ const VideoPinDetail = () => {
 				<Box width='2px' height={'20px'} bg={'gray.500'} mx={2}></Box>
 				<Text width={'30%'} isTruncated color={textColor} fontWeight='semibold'>
 					{videoInfo?.title}
-					{console.log(videoInfo?.title?.length)}
 				</Text>
 			</Flex>
 
@@ -88,8 +96,6 @@ const VideoPinDetail = () => {
 			<Grid templateColumns={'repeat(3,1fr)'} gap={2} width={'100%'}>
 				<GridItem width={'100%'} colSpan={'2'}>
 					<Flex width={'full'} bg='black' position='relative'>
-						{console.log(videoInfo)}
-
 						{/* PLAYER */}
 						<ReactPlayer
 							url={videoInfo?.videoUrl}
@@ -99,6 +105,7 @@ const VideoPinDetail = () => {
 							muted={muted}
 							volume={volume}
 							ref={playerRef}
+							onProgress={handleProgress}
 						/>
 
 						{/* Control for video player */}
@@ -133,11 +140,17 @@ const VideoPinDetail = () => {
 								px={4}
 								bgGradient='linear(to-t, blackAlpha.900, blackAlpha.500, blackAlpha.50)'>
 								{/* Slider */}
-								<Slider aria-label='slider-ex-4' defaultValue={30} min={0} max={100}>
+								<Slider
+									aria-label='slider-ex-4'
+									value={played * 100}
+									transition={'ease-in-out'}
+									transitionDuration={'0.2'}
+									min={0}
+									max={100}>
 									<SliderTrack bg='teal.50'>
 										<SliderFilledTrack bg='teal.300' />
 									</SliderTrack>
-									<SliderThumb boxSize={3} bg='teal.300' />
+									<SliderThumb boxSize={3} bg='teal.300' transition={'ease-in-out'} transitionDuration={'0.2'} />
 								</Slider>
 
 								{/* Other player controls - rewind, fast forward */}
@@ -151,6 +164,7 @@ const VideoPinDetail = () => {
 										)}
 									</Box>
 									<MdForward10 fontSize={30} color={'#f1f1f1'} cursor={'pointer'} onClick={handle10sFastForward} />
+									{/* */}
 									{/* Volumes controls */}
 									<Flex alignItems={'center'}>
 										<Box
@@ -166,7 +180,7 @@ const VideoPinDetail = () => {
 
 										<Slider
 											aria-label='slider-ex-1'
-											defaultValue={30}
+											defaultValue={volume * 100}
 											min={0}
 											max={100}
 											size={'sm'}
