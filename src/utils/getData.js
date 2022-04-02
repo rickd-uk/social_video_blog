@@ -1,5 +1,5 @@
 // prettier-ignore
-import { collection, getDocs, orderBy, query, doc, getDoc } from 'firebase/firestore'
+import { collection, getDocs, orderBy, query, doc, getDoc, deleteDoc } from 'firebase/firestore'
 
 // fetch all docs from firebase
 export const getAllFeeds = async (firestoreDB) => {
@@ -30,4 +30,8 @@ export const getSpecificVideo = async (fireStoreDB, videoId) => {
 	} else {
 		return 'No such document exists'
 	}
+}
+
+export const deleteVideo = async (fireStoreDB, videoId) => {
+	await deleteDoc(doc(fireStoreDB, 'Videos', videoId))
 }

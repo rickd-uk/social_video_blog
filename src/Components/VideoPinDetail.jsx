@@ -1,10 +1,20 @@
 // prettier-ignore
 import {
 	Box,
+	Button,
+	ButtonGroup,
 	Flex,
 	Grid,
 	GridItem,
 	Image,
+	Popover,
+	PopoverArrow,
+	PopoverBody,
+	PopoverCloseButton,
+	PopoverContent,
+	PopoverFooter,
+	PopoverHeader,
+	PopoverTrigger,
 	Slider,
 	SliderFilledTrack,
 	SliderThumb,
@@ -17,10 +27,11 @@ import { FcApproval } from 'react-icons/fc'
 import React, { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
-import { IoHome, IoPause, IoPlay } from 'react-icons/io5'
+import { IoHome, IoPause, IoPlay, IoTrash } from 'react-icons/io5'
 import Spinner from './Spinner'
 
-import { getSpecificVideo, getUserInfo } from '../utils/getData'
+import { getUser } from '../utils'
+import { deleteVideo, getSpecificVideo, getUserInfo } from '../utils/getData'
 
 import logo from '../img/logo.png'
 import { MdForward10, MdFullscreen, MdOutlineReplay10, MdVolumeOff, MdVolumeUp } from 'react-icons/md'
@@ -33,8 +44,7 @@ import screenfull from 'screenfull'
 import HTMLReactParser from 'html-react-parser'
 
 import moment from 'moment'
-
-const firestoreDB = getFirestore(firebaseApp)
+import { useNavigate } from 'react-router-dom'
 
 const avatar = process.env.REACT_APP_DEFAULT_PROFILE_PIC
 
@@ -53,6 +63,11 @@ const format = (seconds) => {
 
 const VideoPinDetail = () => {
 	const { videoId } = useParams()
+	const firestoreDB = getFirestore(firebaseApp)
+
+	const navigate = useNavigate()
+
+	const [localUser] = getUser()
 	const [loading, setLoading] = useState(false)
 	const [videoInfo, setVideoInfo] = useState(null)
 	const [isPlaying, setIsPlaying] = useState(false)
@@ -115,6 +130,13 @@ const VideoPinDetail = () => {
 	const onSeekMouseUp = (e) => {
 		setSeeking(false)
 		playerRef.current.seekTo(e / 100)
+	}
+
+	const deleteTheVideo = (videoId) => {
+		setLoading(true)
+		deleteVideo(firestoreDB, videoId)
+		setLoading(false)
+		navigate('/', { replace: true })
 	}
 
 	const currentTime = playerRef.current ? playerRef.current.getCurrentTime() : '00:00'
@@ -304,6 +326,33 @@ const VideoPinDetail = () => {
 										</Text>
 									)}
 								</Flex>
+							</Flex>
+
+							{/* Action buttons */}
+							<Flex justifyContent={'space-around'} mt={6}>
+								{userInfo?.uid === localUser?.uid && (
+									<Popover>
+										<PopoverTrigger>
+											<Button colorScheme={'red'}>
+												<IoTrash fontSize={20} color={'#fff'} />
+											</Button>
+										</PopoverTrigger>
+										<PopoverContent>
+											<PopoverArrow />
+											<PopoverCloseButton />
+
+											<PopoverBody>Are you sure you want to delete it?</PopoverBody>
+											<PopoverFooter d='flex' justifyContent={'flex-end'}>
+												<ButtonGroup size='sm'>
+													<Button colorScheme='red' onClick={() => deleteTheVideo(videoId)}>
+														Yes
+													</Button>
+													<PopoverCloseButton bg='purple.500' />
+												</ButtonGroup>
+											</PopoverFooter>
+										</PopoverContent>
+									</Popover>
+								)}
 							</Flex>
 						</Flex>
 					)}
