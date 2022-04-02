@@ -12,6 +12,7 @@ import {
 	Text,
 	useColorModeValue,
 } from '@chakra-ui/react'
+import { FcApproval } from 'react-icons/fc'
 
 import React, { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
@@ -19,7 +20,7 @@ import { Link, useParams } from 'react-router-dom'
 import { IoHome, IoPause, IoPlay } from 'react-icons/io5'
 import Spinner from './Spinner'
 
-import { getSpecificVideo } from '../utils/getData'
+import { getSpecificVideo, getUserInfo } from '../utils/getData'
 
 import logo from '../img/logo.png'
 import { MdForward10, MdFullscreen, MdOutlineReplay10, MdVolumeOff, MdVolumeUp } from 'react-icons/md'
@@ -29,8 +30,13 @@ import ReactPlayer from 'react-player'
 import { firebaseApp } from '../firebase-config'
 import { getFirestore } from 'firebase/firestore'
 import screenfull from 'screenfull'
+import HTMLReactParser from 'html-react-parser'
+
+import moment from 'moment'
 
 const firestoreDB = getFirestore(firebaseApp)
+
+const avatar = process.env.REACT_APP_DEFAULT_PROFILE_PIC
 
 const format = (seconds) => {
 	if (isNaN(seconds)) {
@@ -54,6 +60,7 @@ const VideoPinDetail = () => {
 	const [volume, setVolume] = useState(0.5)
 	const [played, setPlayed] = useState(0)
 	const [seeking, setSeeking] = useState(false)
+	const [userInfo, setUserInfo] = useState(null)
 
 	// Custom reference
 	const playerRef = useRef()
@@ -66,6 +73,11 @@ const VideoPinDetail = () => {
 			setLoading(true)
 			getSpecificVideo(firestoreDB, videoId).then((data) => {
 				setVideoInfo(data)
+
+				getUserInfo(firestoreDB, data.userId).then((user) => {
+					setUserInfo(user)
+				})
+
 				setLoading(false)
 			})
 		}
@@ -170,7 +182,7 @@ const VideoPinDetail = () => {
 								width={'full'}
 								alignItems='center'
 								direction={'column'}
-								px={4}
+								px={2}
 								bgGradient='linear(to-t, blackAlpha.900, blackAlpha.500, blackAlpha.50)'>
 								{/* Slider */}
 								<Slider
@@ -190,7 +202,7 @@ const VideoPinDetail = () => {
 								</Slider>
 
 								{/* Other player controls - rewind, fast forward */}
-								<Flex width={'full'} alignItems={'center'} my={2} gap={10}>
+								<Flex width={'full'} alignItems={'center'} my={2} gap={4}>
 									<MdOutlineReplay10 fontSize={30} color={'#f1f1f1'} cursor={'pointer'} onClick={handle10sFastRewind} />
 									<Box onClick={() => setIsPlaying(!isPlaying)}>
 										{!isPlaying ? (
@@ -202,7 +214,7 @@ const VideoPinDetail = () => {
 									<MdForward10 fontSize={30} color={'#f1f1f1'} cursor={'pointer'} onClick={handle10sFastForward} />
 									{/* */}
 									{/* Volumes controls */}
-									<Flex alignItems={'center'}>
+									<Flex alignItems={'center'} ml={5}>
 										<Box
 											onClick={() => {
 												setMuted(!muted)
@@ -219,8 +231,8 @@ const VideoPinDetail = () => {
 											defaultValue={volume * 100}
 											min={0}
 											max={100}
-											size={'sm'}
-											width={26}
+											size={'md'}
+											width={20}
 											mx={2}
 											onChangeStart={handleVolumeChange}
 											onChangeEnd={handleVolumeChange}>
@@ -257,8 +269,45 @@ const VideoPinDetail = () => {
 							</Flex>
 						</Flex>
 					</Flex>
+					{/* Video description */}
+					{videoInfo?.description && (
+						<Flex my={6} direction={'column'}>
+							<Text my={2} fontSize={25} fontWeight={'semibold'}>
+								Description
+							</Text>
+							{HTMLReactParser(videoInfo?.description)}
+						</Flex>
+					)}
 				</GridItem>
-				<GridItem width={'100%'} colSpan={'1'}></GridItem>
+				<GridItem width={'100%'} colSpan={'1'}>
+					{userInfo && (
+						<Flex direction={'column'} width={'full'}>
+							<Flex alignItems={'center'} width='full'>
+								<Image
+									src={userInfo?.photoURL ?? avatar}
+									rounded='full'
+									width={'60px'}
+									height={'60px'}
+									minHeight={'60px'}
+									minWidth={'60px'}
+								/>
+								<Flex direction={'column'} ml={3}>
+									<Flex alignItems={'center'}>
+										<Text isTruncated color={textColor} fontWeight='semibold'>
+											{userInfo?.displayName}
+										</Text>
+										<FcApproval />
+									</Flex>
+									{videoInfo?.id && (
+										<Text fontSize={12} color={textColor} ml={'auto'}>
+											{moment(new Date(parseInt(videoInfo.id)).toISOString()).fromNow()}
+										</Text>
+									)}
+								</Flex>
+							</Flex>
+						</Flex>
+					)}
+				</GridItem>
 			</Grid>
 		</Flex>
 	)

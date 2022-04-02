@@ -77,6 +77,7 @@ const VideoPin = ({ data }) => {
 							<Image
 								src={userInfo?.photoURL ?? avatar}
 								rounded='full'
+								minHeight={'50px'}
 								minWidth={'50px'}
 								width={'50px'}
 								height={'50px'}

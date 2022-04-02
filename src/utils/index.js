@@ -1,6 +1,3 @@
-import { firebaseApp } from '../firebase-config'
-import { getAuth } from 'firebase/auth'
-
 export const getUserAccessToken = () => {
 	const accessToken =
 		localStorage.getItem('accessToken') !== 'undefined'
