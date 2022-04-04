@@ -46,6 +46,8 @@ import HTMLReactParser from 'html-react-parser'
 import moment from 'moment'
 import { useNavigate } from 'react-router-dom'
 
+import { getStorage, ref, getDownloadURL } from 'firebase/storage'
+
 const avatar = process.env.REACT_APP_DEFAULT_PROFILE_PIC
 
 const format = (seconds) => {
@@ -59,6 +61,30 @@ const format = (seconds) => {
 
 	if (hh) return `${hh}:${mm}:${ss}` // 01:54:23
 	return `${mm}:${ss}` // 03:24
+}
+
+const downloadVideo = (videoInfo) => {
+	const storage = getStorage()
+	getDownloadURL(ref(storage, `${videoInfo.videoUrl}`))
+		.then(async (url) => {
+			const file = await fetch(url)
+			const fileBlog = await file.blob()
+			const fileURL = URL.createObjectURL(fileBlog)
+
+			const anchor = document.createElement('a')
+			anchor.href = fileURL
+			anchor.download = 'test.mp4'
+
+			document.body.appendChild(anchor)
+			anchor.click()
+
+			document.body.removeChild(anchor)
+			URL.revokeObjectURL(fileURL)
+		})
+		.catch((error) => {
+			// Handle any errors
+			console.log(error)
+		})
 }
 
 const VideoPinDetail = () => {
@@ -153,15 +179,15 @@ const VideoPinDetail = () => {
 				<Link to={'/'}>
 					<IoHome fontSize={25} />
 				</Link>
-				<Box width='2px' height={'20px'} bg={'gray.500'} mx={2}></Box>
-				<Text width={'30%'} isTruncated color={textColor} fontWeight='semibold'>
+				<Box width='1px' height={'25px'} bg={'gray.500'} mx={2}></Box>
+				<Text width={'100%'} isTruncated color={textColor} fontWeight='semibold'>
 					{videoInfo?.title}
 				</Text>
 			</Flex>
 
 			{/* Main Grid for video  */}
-			<Grid templateColumns={'repeat(3,1fr)'} gap={2} width={'100%'}>
-				<GridItem width={'100%'} colSpan={'2'}>
+			<Grid templateColumns={'repeat(4,1fr)'} gap={2} width={'100%'}>
+				<GridItem width={'100%'} colSpan={'3'}>
 					<Flex width={'full'} bg='black' position='relative' ref={playerContainer}>
 						{/* PLAYER */}
 						<ReactPlayer
@@ -354,6 +380,10 @@ const VideoPinDetail = () => {
 										</PopoverContent>
 									</Popover>
 								)}
+
+								<Button colorScheme={'whatsapp'} rounded='full' my={2} mt={'0'} onClick={() => downloadVideo(videoInfo)}>
+									Free Download
+								</Button>
 							</Flex>
 						</Flex>
 					)}
