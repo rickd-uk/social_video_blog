@@ -9,6 +9,7 @@ import Spinner from '../Components/Spinner'
 import { Box, SimpleGrid } from '@chakra-ui/react'
 import VideoPin from './VideoPin'
 import { useParams } from 'react-router-dom'
+import NotFound from './NotFound'
 
 const Feed = () => {
 	// firebase db instance
@@ -33,6 +34,8 @@ const Feed = () => {
 	}, [categoryId, fireStoreDB])
 
 	if (loading) <Spinner msg={'Loading your feeds'} />
+
+	if (!feeds?.length > 0) return <NotFound />
 
 	return (
 		<SimpleGrid minChildWidth='300px' spacing='15px' width='full' autoColumns={'max-content'} px='2px' overflow={'hidden'}>
