@@ -44,3 +44,10 @@ export const getSpecificVideo = async (fireStoreDB, videoId) => {
 export const deleteVideo = async (fireStoreDB, videoId) => {
 	await deleteDoc(doc(fireStoreDB, 'Videos', videoId))
 }
+
+// User uploaded videos
+export const userUploadedVideos = async (firestoreDB, userId) => {
+	const feeds = await getDocs(query(collection(firestoreDB, 'Videos'), where('userId', '==', userId), orderBy('id', 'desc')))
+
+	return feeds.docs.map((doc) => doc.data())
+}

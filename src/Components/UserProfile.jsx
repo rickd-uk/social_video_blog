@@ -4,7 +4,8 @@ import { firebaseApp } from '../firebase-config'
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { getUserInfo } from '../utils/getData'
+import { getUserInfo, userUploadedVideos } from '../utils/getData'
+import RecommendedVideos from './RecommendedVideos'
 
 const randomImage = 'https://source.unsplash.com/1600x900/?nature,photography,technology'
 
@@ -12,6 +13,7 @@ const UserProfile = () => {
 	const { userId } = useParams()
 	const [isLoading, setIsLoading] = useState(false)
 	const [userInfo, setUserInfo] = useState(null)
+	const [feeds, setFeeds] = useState(null)
 
 	const firestoreDB = getFirestore(firebaseApp)
 
@@ -20,10 +22,14 @@ const UserProfile = () => {
 		if (userId) {
 			getUserInfo(firestoreDB, userId).then((user) => {
 				setUserInfo(user)
-				setIsLoading(false)
 			})
+
+			userUploadedVideos(firestoreDB, userId).then((feed) => {
+				setFeeds(feed)
+			})
+			setIsLoading(false)
 		}
-	}, [userId])
+	}, [firestoreDB, userId])
 
 	if (isLoading) <Spinner />
 	return (
@@ -40,6 +46,13 @@ const UserProfile = () => {
 					shadow={'lg'}
 					mt='-16'></Image>
 			</Flex>
+
+			{feeds?.length === 0 ||
+				(feeds !== null && (
+					<Flex direction={'column'} width='full' my={6}>
+						<RecommendedVideos feeds={feeds} />
+					</Flex>
+				))}
 		</Flex>
 	)
 }
