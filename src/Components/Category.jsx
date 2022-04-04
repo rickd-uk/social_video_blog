@@ -8,7 +8,7 @@ const Category = ({ data }) => {
 
 	return (
 		<Flex cursor={'pointer'} my='5'>
-			<Link to={`/category/${data.namè}`}>
+			<Link to={`/category/${data.name}`}>
 				<Tooltip hasArrow placement='right' closeDelay={200} arrowSize={5} label={data.name} bg={bg}>
 					<Box>{data.iconSrc}</Box>
 				</Tooltip>

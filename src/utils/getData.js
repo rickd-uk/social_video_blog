@@ -17,6 +17,13 @@ export const recommendedFeeds = async (firestoreDB, categoryId, videoId) => {
 	return feeds.docs.map((doc) => doc.data())
 }
 
+// Categorywise feeds feeds
+export const getCategoryFeeds = async (firestoreDB, categoryId) => {
+	const feeds = await getDocs(query(collection(firestoreDB, 'Videos'), where('category', '==', categoryId), orderBy('id', 'desc')))
+
+	return feeds.docs.map((doc) => doc.data())
+}
+
 //  fetch user info: user & uid
 export const getUserInfo = async (fireStoreDB, userId) => {
 	const userRef = doc(fireStoreDB, 'users', userId)
