@@ -1,9 +1,18 @@
 // prettier-ignore
-import { collection, getDocs, orderBy, query, doc, getDoc, deleteDoc } from 'firebase/firestore'
+import { collection, getDocs, orderBy, query, doc, getDoc, deleteDoc, where } from 'firebase/firestore'
 
 // fetch all docs from firebase
 export const getAllFeeds = async (firestoreDB) => {
 	const feeds = await getDocs(query(collection(firestoreDB, 'Videos'), orderBy('id', 'desc')))
+
+	return feeds.docs.map((doc) => doc.data())
+}
+
+// fetch recommended feeds
+export const recommendedFeeds = async (firestoreDB, categoryId, videoId) => {
+	const feeds = await getDocs(
+		query(collection(firestoreDB, 'Videos'), where('category', '==', categoryId), where('id', '!=', videoId), orderBy('id', 'desc')),
+	)
 
 	return feeds.docs.map((doc) => doc.data())
 }

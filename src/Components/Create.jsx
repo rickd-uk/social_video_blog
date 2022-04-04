@@ -46,6 +46,12 @@ const Create = () => {
 
 	const storage = getStorage(firebaseApp)
 
+	const waitBeforeNavigate = (navigateTo = '/', waitFor = 1000) => {
+		setTimeout(() => {
+			navigate(navigateTo, { replace: true })
+		}, waitFor)
+	}
+
 	const uploadImage = (e) => {
 		setLoading(true)
 		const videoFile = e.target.files[0]
@@ -128,7 +134,7 @@ const Create = () => {
 				}
 				await setDoc(doc(firestoreDB, 'Videos', `${Date.now()}`), data)
 				setLoading(false)
-				navigate('/', { replace: true })
+				waitBeforeNavigate('/', 1200)
 			}
 			setLoading(false)
 		} catch (error) {
@@ -136,14 +142,14 @@ const Create = () => {
 		}
 	}
 
-	const mountedRef = useRef(true)
+	// const mountedRef = useRef(true)
 
-	useEffect(() => {
-		// clean up controller
-		return () => {
-			mountedRef.current = false
-		}
-	}, [title, location, description, category])
+	// useEffect(() => {
+	// 	// clean up controller
+	// 	return () => {
+	// 		mountedRef.current = false
+	// 	}
+	// }, [title, location, description, category])
 
 	return (
 		<Flex justifyContent={'center'} alignItems={'center'} width={'100vw'} minHeight='100vh' padding={10}>

@@ -31,7 +31,7 @@ import { IoHome, IoPause, IoPlay, IoTrash } from 'react-icons/io5'
 import Spinner from './Spinner'
 
 import { getUser } from '../utils'
-import { deleteVideo, getSpecificVideo, getUserInfo } from '../utils/getData'
+import { deleteVideo, getSpecificVideo, getUserInfo, recommendedFeeds } from '../utils/getData'
 
 import logo from '../img/logo.png'
 import { MdForward10, MdFullscreen, MdOutlineReplay10, MdVolumeOff, MdVolumeUp } from 'react-icons/md'
@@ -47,6 +47,8 @@ import moment from 'moment'
 import { useNavigate } from 'react-router-dom'
 
 import { getStorage, ref, getDownloadURL } from 'firebase/storage'
+import RecommendedVideos from './RecommendedVideos'
+import Category from './Category'
 
 const avatar = process.env.REACT_APP_DEFAULT_PROFILE_PIC
 
@@ -102,6 +104,7 @@ const VideoPinDetail = () => {
 	const [played, setPlayed] = useState(0)
 	const [seeking, setSeeking] = useState(false)
 	const [userInfo, setUserInfo] = useState(null)
+	const [feeds, setFeeds] = useState(null)
 
 	// Custom reference
 	const playerRef = useRef()
@@ -114,6 +117,10 @@ const VideoPinDetail = () => {
 			setLoading(true)
 			getSpecificVideo(firestoreDB, videoId).then((data) => {
 				setVideoInfo(data)
+
+				recommendedFeeds(firestoreDB, data?.category, videoId).then((feed) => {
+					setFeeds(feed)
+				})
 
 				getUserInfo(firestoreDB, data.userId).then((user) => {
 					setUserInfo(user)
@@ -389,6 +396,16 @@ const VideoPinDetail = () => {
 					)}
 				</GridItem>
 			</Grid>
+
+			{feeds?.length === 0 ||
+				(feeds !== null && (
+					<Flex direction={'column'} width='full' my={6}>
+						<Text my={4} fontSize={25} fontWeight='semibold'>
+							Recommended Videos
+						</Text>
+						<RecommendedVideos feeds={feeds} />
+					</Flex>
+				))}
 		</Flex>
 	)
 }

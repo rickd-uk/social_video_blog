@@ -11,24 +11,6 @@ import moment from 'moment'
 
 const avatar = process.env.REACT_APP_DEFAULT_PROFILE_PIC
 
-// const handlePlay = (e) => {
-// 	var playPromise = e.target.play()
-
-// 	if (playPromise !== undefined) {
-// 		playPromise
-// 			.then((_) => {
-// 				// Automatic playback started!
-// 				// Show playing UI.
-// 				// We can now safely pause video...
-// 				e.target.pause()
-// 			})
-// 			.catch((error) => {
-// 				// Auto-play was prevented
-// 				// Show paused UI.
-// 			})
-// 	}
-// }
-
 const VideoPin = ({ data }) => {
 	const fireStoreDB = getFirestore(firebaseApp)
 
