@@ -65,7 +65,7 @@ const Navbar = ({ user }) => {
 						<Image src={user?.photoURL ? user?.photoURL : avatar} minWidth='40px' height='40px' rounded='full' />
 					</MenuButton>
 					<MenuList shadow={'lg'}>
-						<Link to={''}>
+						<Link to={`/userDetail/${user?.uid}`}>
 							<MenuItem>My Account</MenuItem>
 						</Link>
 						<MenuItem flexDirection={'row'} alignItems={'center'} gap={4}></MenuItem>
